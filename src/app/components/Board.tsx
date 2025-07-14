@@ -1,6 +1,8 @@
+import { highlightIndicator } from "../lib/utils/dragHelper"
 import { ColumnProps } from "../types/boardType"
 import Column from "./Column"
 import ColumnDropIndicator from "./ColumnDropIndicator"
+import { DragEvent } from "react"
 
 export default function Board() {
     const columns: ColumnProps[] = [
@@ -31,15 +33,33 @@ export default function Board() {
         },
     ]
 
+    const handleDragStart = (e: DragEvent<HTMLDivElement>, dataLabel: string, data: ColumnProps) => {
+        e.dataTransfer.setData(dataLabel, data.id);
+        // if (dataLabel === "columnId") {
+        //     setIsCardDisabled(true);
+        // }
+    }
+
+    const handleDragOver = (e: DragEvent<HTMLDivElement>, type: string) => {
+        e.preventDefault();
+
+        // if (isCardDisabled || type === "board") {
+        highlightIndicator(e, "board", type);
+        // setActive(true);
+        // }
+    }
+
 
     return (
         <div>
-            <div className="flex gap-4 m-10">
+            <div
+             onDragOver={(e) => handleDragOver(e, "board")}
+             className="flex gap-4 m-10">
                 {columns.map((column) => (
-                    <Column key={column.id} column={column} />
+                    <Column key={column.id} column={column} handleDragStart={handleDragStart} />
                 ))}
             </div>
-            <ColumnDropIndicator beforeId={"-1"} column={columns[columns.length - 1].label} />
+            <ColumnDropIndicator beforeId={"-1"} />
 
         </div>
     )
