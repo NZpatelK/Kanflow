@@ -10,26 +10,22 @@ export default function Board() {
             id: "1",
             title: "Backlog",
             headingColor: "text-gray-600",
-            label: "backlog"
         },
         {
             id: "2",
             title: "To Do",
             headingColor: "text-yellow-200",
-            label: "todo"
 
         },
         {
             id: "3",
             title: "In Progress",
             headingColor: "text-blue-300",
-            label: "inprogress"
         },
         {
             id: "4",
             title: "Done",
             headingColor: "text-green-200",
-            label: "done"
         },
     ]
 
