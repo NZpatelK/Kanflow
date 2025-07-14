@@ -53,13 +53,13 @@ export default function Board() {
     return (
         <div>
             <div
-             onDragOver={(e) => handleDragOver(e, "board")}
-             className="flex gap-4 m-10">
+                onDragOver={(e) => handleDragOver(e, "board")}
+                className="flex gap-4 m-10">
                 {columns.map((column) => (
                     <Column key={column.id} column={column} handleDragStart={handleDragStart} />
                 ))}
+                <ColumnDropIndicator beforeId={"-1"} />
             </div>
-            <ColumnDropIndicator beforeId={"-1"} />
 
         </div>
     )
