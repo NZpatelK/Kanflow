@@ -1,5 +1,70 @@
 import { DragEvent } from "react";
+import { ColumnProps } from "../../types/boardType";
 
+
+//---------------------------Handle Drag Functions---------------------------//
+
+export const handleDragStart = (e: DragEvent<HTMLDivElement>, dataLabel: string, data: ColumnProps) => {
+    e.dataTransfer.setData(dataLabel, data.id);
+    // if (dataLabel === "columnId") {
+    //     setIsCardDisabled(true);
+    // }
+}
+
+export const handleDragOver = (e: DragEvent<HTMLDivElement>, type: string) => {
+    e.preventDefault();
+
+    // if (isCardDisabled || type === "board") {
+    highlightIndicator(e, "board", type);
+    // setActive(true);
+    // }
+}
+
+
+
+export const handleDragEnd = (e: DragEvent<HTMLDivElement>, type: string, columns: ColumnProps[]) => {
+    e.preventDefault();
+    // setActive(false);
+    clearHighlights("board", type);
+
+    const columnId = e.dataTransfer.getData("columnId");
+    const indicators = getIndicators("board", "board");
+    const { element } = getNearestIndicator(e, indicators as HTMLDivElement[]);
+
+    const before = element.dataset.before || "-1";
+
+    if (before !== columnId) {
+        let copy = [...columns];
+
+        let columnToTransfer = copy.find((c) => c.id === columnId);
+        if (!columnToTransfer) return;
+        columnToTransfer = { ...columnToTransfer };
+
+        copy = copy.filter((c) => c.id !== columnId);
+
+        const moveToBack = before === "-1";
+
+        if (moveToBack) {
+            copy.push(columnToTransfer);
+        } else {
+            const insertAtIndex = copy.findIndex((el) => el.id === before);
+            if (insertAtIndex === undefined) return;
+
+            copy.splice(insertAtIndex, 0, columnToTransfer);
+        }
+
+        return copy;
+    }
+}
+
+
+
+
+
+
+
+
+//---------------------------Drag Event Trigger Functions---------------------------//
 
 export const getNearestIndicator = (
     e: DragEvent<HTMLDivElement>,
@@ -22,7 +87,6 @@ export const getNearestIndicator = (
     );
 };
 
-
 export const highlightIndicator = (e: DragEvent<HTMLDivElement>, column: string, type: string) => {
     const indicators = getIndicators(column, type);
     clearHighlights(column, type, indicators);
@@ -39,7 +103,7 @@ export const clearHighlights = (column: string, type: string, els?: HTMLDivEleme
 
 export const getIndicators = (column: string, type: string): HTMLDivElement[] => {
     // return Array.from(document.querySelectorAll(`[data-column="${column}"]`));
-    if(type === "card") {
+    if (type === "card") {
         return Array.from(document.querySelectorAll(`[data-column="${column}"]`));
     }
     else {
