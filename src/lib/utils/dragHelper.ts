@@ -15,20 +15,18 @@ export const handleDragOver = (e: DragEvent<HTMLDivElement>, type: string) => {
     e.preventDefault();
 
     // if (isCardDisabled || type === "board") {
-    highlightIndicator(e, "board", type);
+    highlightIndicator(e, type);
     // setActive(true);
     // }
 }
 
-
-
 export const handleDragEnd = (e: DragEvent<HTMLDivElement>, type: string, columns: ColumnProps[]) => {
     e.preventDefault();
     // setActive(false);
-    clearHighlights("board", type);
+    clearHighlights(type);
 
     const columnId = e.dataTransfer.getData("columnId");
-    const indicators = getIndicators("board", "board");
+    const indicators = getIndicators(type);
     const { element } = getNearestIndicator(e, indicators as HTMLDivElement[]);
 
     const before = element.dataset.before || "-1";
@@ -57,13 +55,6 @@ export const handleDragEnd = (e: DragEvent<HTMLDivElement>, type: string, column
     }
 }
 
-
-
-
-
-
-
-
 //---------------------------Drag Event Trigger Functions---------------------------//
 
 export const getNearestIndicator = (
@@ -87,22 +78,21 @@ export const getNearestIndicator = (
     );
 };
 
-export const highlightIndicator = (e: DragEvent<HTMLDivElement>, column: string, type: string) => {
-    const indicators = getIndicators(column, type);
-    clearHighlights(column, type, indicators);
+export const highlightIndicator = (e: DragEvent<HTMLDivElement>, type: string, column?: string) => {
+    const indicators = getIndicators(type, column);
+    clearHighlights(type, indicators, column);
     const el = getNearestIndicator(e, indicators);
     el.element.style.opacity = "1";
 };
 
-export const clearHighlights = (column: string, type: string, els?: HTMLDivElement[]) => {
-    const indicators = els || getIndicators(column, type);
+export const clearHighlights = (type: string, els?: HTMLDivElement[], column?: string) => {
+    const indicators = els || getIndicators(type, column);
     indicators.forEach((i) => {
         i.style.opacity = "0";
     });
 };
 
-export const getIndicators = (column: string, type: string): HTMLDivElement[] => {
-    // return Array.from(document.querySelectorAll(`[data-column="${column}"]`));
+export const getIndicators = (type: string, column?: string): HTMLDivElement[] => {
     if (type === "card") {
         return Array.from(document.querySelectorAll(`[data-column="${column}"]`));
     }

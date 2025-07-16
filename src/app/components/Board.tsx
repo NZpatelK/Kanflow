@@ -1,39 +1,29 @@
-import {handleDragEnd, handleDragOver, handleDragStart } from "../lib/utils/dragHelper"
-import { ColumnProps } from "../types/boardType"
+import { handleDragEnd, handleDragOver, handleDragStart } from "@/lib/utils/dragHelper"
+import { ColumnProps } from "@/types/boardType"
 import Column from "./Column"
 import ColumnDropIndicator from "./ColumnDropIndicator"
-import { DragEvent, useState } from "react"
+import { DragEvent, useEffect, useState } from "react"
+import { fetchColumns } from "@/lib/utils/dataHelper"
 
 export default function Board() {
     const DROP_INDICATOR_LABEL = "board";
-    const [columns, setColumns] = useState<ColumnProps[]>([
-        {
-            id: "1",
-            title: "Backlog",
-            headingColor: "text-gray-600",
-        },
-        {
-            id: "2",
-            title: "To Do",
-            headingColor: "text-yellow-200",
+    const [columns, setColumns] = useState<ColumnProps[]>([])
 
-        },
-        {
-            id: "3",
-            title: "In Progress",
-            headingColor: "text-blue-300",
-        },
-        {
-            id: "4",
-            title: "Done",
-            headingColor: "text-green-200",
-        },
-    ])
+    useEffect(() => {
+        async function fetchData() {
+            const fetchedColumns = await fetchColumns();
+            if (fetchedColumns) {
+                setColumns(fetchedColumns);
+            }
+        }
+        
+        fetchData();
+    }, [])
 
     const handleColumnDragEnd = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         const updateColumns = handleDragEnd(e, DROP_INDICATOR_LABEL, columns) as ColumnProps[];
-        if(updateColumns) {
+        if (updateColumns) {
             setColumns(updateColumns);
         }
     }

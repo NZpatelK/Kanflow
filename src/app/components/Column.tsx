@@ -1,6 +1,6 @@
 'use client'
 import { motion } from "framer-motion";
-import { ColumnProps } from "../types/boardType";
+import { ColumnProps } from "@/types/boardType";
 import ColumnDropIndicator from "./ColumnDropIndicator";
 import { DragEvent } from "react";
 
