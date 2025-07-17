@@ -4,20 +4,24 @@ import Column from "./Column"
 import ColumnDropIndicator from "./ColumnDropIndicator"
 import { DragEvent, useEffect, useState } from "react"
 import { addColumn, fetchColumns, updateColumnOrder } from "@/lib/utils/dataHelper"
+import LoadingSpinner from "./LoadingSpinner"
 
 export default function Board() {
     const DROP_INDICATOR_LABEL = "board";
-    const [columns, setColumns] = useState<ColumnProps[]>([])
+    const [columns, setColumns] = useState<ColumnProps[]>([]);
+    const [loading, setLoading] = useState<boolean>(true); // ← Add loading state
 
     useEffect(() => {
         fetchData();
-    }, [])
+    }, []);
 
     const fetchData = async () => {
+        setLoading(true); // ← Start loading
         const fetchedColumns = await fetchColumns();
         if (fetchedColumns) {
             setColumns(fetchedColumns);
         }
+        setLoading(false); // ← Stop loading
     }
 
     const handleAddColumn = async () => {
@@ -38,14 +42,21 @@ export default function Board() {
         <div className="flex gap-4 m-20"
             onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
             onDrop={handleColumnDragEnd}>
-            {columns.map((column) => (
-                <Column key={column.id} column={column} handleDragStart={handleDragStart} />
-            ))}
-            <ColumnDropIndicator beforeId={"-1"} />
-            <div className="mt-4">
-                <h2 onClick={handleAddColumn} className="fflex items-center p-2 text-xs text-nowrap text-gray-400 mx-5 cursor-pointer hover:text-violet-400">Add Column</h2>
-            </div>
+            {loading ? (
+                <div className="flex justify-center items-center w-full">
+                    <LoadingSpinner />
+                </div>
+            ) : (
+                <>
+                    {columns.map((column) => (
+                        <Column key={column.id} column={column} handleDragStart={handleDragStart} />
+                    ))}
+                    <ColumnDropIndicator beforeId={"-1"} />
+                    <div className="mt-4">
+                        <h2 onClick={handleAddColumn} className="flex items-center p-2 text-xs text-nowrap text-gray-400 mx-5 cursor-pointer hover:text-violet-400">Add Column</h2>
+                    </div>
+                </>
+            )}
         </div>
-
-    )
+    );
 }
