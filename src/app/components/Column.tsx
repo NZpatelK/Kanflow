@@ -6,6 +6,7 @@ import { DragEvent, useEffect, useState } from "react";
 import { fetchCardsByColumnId } from "@/lib/utils/dataHelper";
 import Card from "./Card";
 import CardDropIndicator from "./CardDropIndicator";
+import AddCard from "./AddCard";
 
 interface ColumnsProps {
     column: ColumnProps;
@@ -45,7 +46,7 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
                         <Card key={card.id} card={card} />
                     ))}
                     <CardDropIndicator beforeId={"-1"} column={column.id} />
-
+                    <AddCard columnId={column.id} />
                 </div>
             </div>
         </div>
