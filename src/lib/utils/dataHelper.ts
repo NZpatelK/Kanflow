@@ -32,7 +32,7 @@ export const addColumn = async (title: string, headingColor: string) => {
 
     if (fetchError) console.error('Fetch error:', fetchError)
 
-    const nextOrder = existing?.[0]?.order + 1 || 0
+    const nextOrder = existing?.[0]?.order + 1 || 1
 
     const { error } = await supabase.from('columns').insert([
         {
@@ -86,5 +86,34 @@ export const fetchCardsByColumnId = async (columnId: string) => {
     if (error) console.error('Fetch error:', error)
     else {
         return data
+    }
+}
+
+export const addCard = async (message: string, columnId: string) => {
+    if (!message) return
+
+    // Get current max order to place new card at the end
+    const { data: existing, error: fetchError } = await supabase
+        .from('cards')
+        .select('order')
+        .eq('column_id', columnId)
+        .order('order', { ascending: false })
+        .limit(1)
+
+    if (fetchError) console.error('Fetch error:', fetchError)
+
+    const nextOrder = existing?.[0]?.order + 1 || 1
+
+    const { error } = await supabase.from('cards').insert([
+        {
+            id: crypto.randomUUID(),
+            message,
+            column_id: columnId,
+            order: nextOrder,
+        },
+    ])
+
+    if (error) {
+        console.error('Insert failed:', error)
     }
 }

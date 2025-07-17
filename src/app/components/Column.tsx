@@ -46,7 +46,7 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
                         <Card key={card.id} card={card} />
                     ))}
                     <CardDropIndicator beforeId={"-1"} column={column.id} />
-                    <AddCard columnId={column.id} />
+                    <AddCard columnId={column.id} onCardAdded={fetchDataByColumnId} />
                 </div>
             </div>
         </div>

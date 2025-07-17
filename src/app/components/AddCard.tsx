@@ -1,13 +1,23 @@
+import { addCard } from "@/lib/utils/dataHelper";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
 interface AddCardProps {
     columnId: string
+    onCardAdded: () => void;
 }
 
-export default function AddCard({ columnId }: AddCardProps) {
+export default function AddCard({ columnId, onCardAdded }: AddCardProps) {
     const [message, setMessage] = useState("");
     const [adding, setAdding] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        await addCard(message, columnId);
+        setAdding(false);
+        setMessage("");
+        onCardAdded();
+    };
 
     return (
         <>
@@ -15,8 +25,8 @@ export default function AddCard({ columnId }: AddCardProps) {
                 {adding ? (
                     <motion.form
                         layout
-                        // onSubmit={handleSubmit}
-                        >
+                        onSubmit={handleSubmit}
+                    >
                         <textarea
                             onChange={(e) => setMessage(e.target.value)}
                             value={message}
@@ -42,14 +52,13 @@ export default function AddCard({ columnId }: AddCardProps) {
                         </div>
                     </motion.form>
                 ) : (
-                    <motion.button
-                        layout
+                    <button
                         onClick={() => setAdding(true)}
                         className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50"
                     >
                         <span>Add Card</span>
                         {/* <FiPlus /> */}
-                    </motion.button>
+                    </button>
                 )}
             </>
         </>
