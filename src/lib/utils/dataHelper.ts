@@ -1,7 +1,7 @@
 import { ColumnProps } from "@/types/boardType"
 import { supabase } from "../supabaseClient"
 
-
+//-----------------------------------------Columns------------------------------------------//
 export const fetchColumns = async () => {
     const { data, error } = await supabase
         .from('columns')
@@ -61,4 +61,30 @@ export const updateColumnOrder = async (columns: ColumnProps[]) => {
         .upsert(updateColumns, {onConflict: 'id'})
 
     if (error) console.error('Order update failed', error)
+}
+
+//-----------------------------------------Cards------------------------------------------//
+export const fetchCards = async () => {
+    const { data, error } = await supabase
+        .from('cards')
+        .select('*')
+        .order('order', { ascending: true })
+
+    if (error) console.error('Fetch error:', error)
+    else {
+        return data
+    }
+}
+
+export const fetchCardsByColumnId = async (columnId: string) => {
+    const { data, error } = await supabase
+        .from('cards')
+        .select('*')
+        .eq('column_id', columnId)
+        .order('order', { ascending: true })
+
+    if (error) console.error('Fetch error:', error)
+    else {
+        return data
+    }
 }

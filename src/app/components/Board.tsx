@@ -1,14 +1,15 @@
 import { handleDragEnd, handleDragOver, handleDragStart } from "@/lib/utils/dragHelper"
-import { ColumnProps } from "@/types/boardType"
+import { CardProps, ColumnProps } from "@/types/boardType"
 import Column from "./Column"
 import ColumnDropIndicator from "./ColumnDropIndicator"
 import { DragEvent, useEffect, useState } from "react"
-import { addColumn, fetchColumns, updateColumnOrder } from "@/lib/utils/dataHelper"
+import { addColumn, fetchCards, fetchColumns, updateColumnOrder } from "@/lib/utils/dataHelper"
 import LoadingSpinner from "./LoadingSpinner"
 
 export default function Board() {
     const DROP_INDICATOR_LABEL = "board";
     const [columns, setColumns] = useState<ColumnProps[]>([]);
+    const [cards, setCards] = useState<CardProps[]>([]);
     const [loading, setLoading] = useState<boolean>(true); // ← Add loading state
 
     useEffect(() => {
@@ -20,6 +21,12 @@ export default function Board() {
         const fetchedColumns = await fetchColumns();
         if (fetchedColumns) {
             setColumns(fetchedColumns);
+        }
+
+        const fetchedCards = await fetchCards();
+        if (fetchedCards) {
+            console.log(fetchedCards);
+            setCards(fetchedCards);
         }
         setLoading(false); // ← Stop loading
     }

@@ -3,3 +3,9 @@ export interface ColumnProps {
     title: string;
     headingColor: string;
 }
+
+export interface CardProps {
+    id: string;
+    message: string;
+    columnId: string;
+}
