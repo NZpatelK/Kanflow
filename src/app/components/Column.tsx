@@ -16,18 +16,20 @@ interface ColumnsProps {
 
 export default function Column({ column, handleDragStart }: ColumnsProps) {
     const [cards, setCards] = useState<CardProps[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchDataByColumnId();
     }, []);
 
     const fetchDataByColumnId = async () => {
+        setLoading(true);
         const fetchData = await fetchCardsByColumnId(column.id);
         if (fetchData) {
             setCards(fetchData);
         }
-    }
-
+        setLoading(false);
+    };
 
     return (
         <div className="flex">
@@ -38,17 +40,25 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
                     layoutId={column.id}
                     draggable
                     onDragStart={(e) => handleDragStart(e, "columnId", column)}
-                    className=" min-w-[300px] p-4 rounded">
+                    className="min-w-[300px] p-4 rounded"
+                >
                     <h2 className={`${column.headingColor} font-semibold`}>{column.title}</h2>
                     <hr className="my-4 text-neutral-400/20" />
                 </motion.div>
                 <div>
-                    {cards.map((card) => (
-                        <Card key={card.id} card={card} />
-                    ))}
-                    <CardDropIndicator beforeId={"-1"} column={column.id} />
-                    <AddCard columnId={column.id} onCardAdded={fetchDataByColumnId} />
-                    <LoadingCard/>
+                    {loading ? (
+                        Array.from({ length: Math.floor(Math.random() * 4) + 3 }).map((_, i) => (
+                            <LoadingCard key={i} />
+                        ))
+                    ) : (
+                        <>
+                            {cards.map((card) => (
+                                <Card key={card.id} card={card} />
+                            ))}
+                            <CardDropIndicator beforeId={"-1"} column={column.id} />
+                            <AddCard columnId={column.id} onCardAdded={fetchDataByColumnId} />
+                        </>
+                    )}
                 </div>
             </div>
         </div>
