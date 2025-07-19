@@ -59,6 +59,42 @@ export const handleDragEnd = (e: DragEvent<HTMLDivElement>, type: string, column
     }
 }
 
+export const handleCardDragEnd = (e: DragEvent<HTMLDivElement>, type: string, columnId: string, card: CardProps[]) => {
+    e.preventDefault();
+    clearHighlights(type);
+
+    const cardId = e.dataTransfer.getData("cardId");
+    const indicators = getIndicators(type, columnId);
+    const { element } = getNearestIndicator(e, indicators as HTMLDivElement[], type);
+
+    const before = element.dataset.before || "-1";
+
+    if (before !== cardId) {
+        let copy = [...card];
+
+        let cardToTransfer = copy.find((c) => c.id === cardId);
+        if (!cardToTransfer) return;
+        cardToTransfer = { ...cardToTransfer, columnId: columnId };
+
+        copy = copy.filter((c) => c.id !== cardId);
+
+        const moveToBack = before === "-1";
+
+        if (moveToBack) {
+            copy.push(cardToTransfer);
+        } else {
+            const insertAtIndex = copy.findIndex((el) => el.id === before);
+            if (insertAtIndex === undefined) return;
+
+            copy.splice(insertAtIndex, 0, cardToTransfer);
+        }
+
+        console.log("updateCards" ,copy);
+
+        return copy;
+    }
+}
+
 //---------------------------Drag Event Trigger Functions---------------------------//
 
 export const getNearestIndicator = (

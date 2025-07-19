@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import { CardProps, ColumnProps } from "@/types/boardType";
 import ColumnDropIndicator from "./ColumnDropIndicator";
 import { DragEvent, useEffect, useState } from "react";
-import { fetchCardsByColumnId } from "@/lib/utils/dataHelper";
+import { fetchCards, fetchCardsByColumnId, updateCardOrder } from "@/lib/utils/dataHelper";
 import Card from "./Card";
 import CardDropIndicator from "./CardDropIndicator";
 import AddCard from "./AddCard";
 import LoadingCard from "./LoadingCard";
-import { handleDragLeave, handleDragOver } from "@/lib/utils/dragHelper";
+import { handleCardDragEnd, handleDragLeave, handleDragOver } from "@/lib/utils/dragHelper";
 
 interface ColumnsProps {
     column: ColumnProps;
@@ -16,6 +16,8 @@ interface ColumnsProps {
 }
 
 export default function Column({ column, handleDragStart }: ColumnsProps) {
+    const CARD_DROP_INDICATOR_LABEL = "card";
+
     const [cards, setCards] = useState<CardProps[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -31,6 +33,16 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
         }
         setLoading(false);
     };
+
+    const handleDragEnd = async (e: DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        // console.log(  "updateCards",fetchCardsData);
+        const updateCards = handleCardDragEnd(e, CARD_DROP_INDICATOR_LABEL, column.id , cards);
+        if (updateCards) {
+            setCards(updateCards);
+            updateCardOrder(updateCards);
+        }
+    }
 
     return (
         <div className="flex">
@@ -53,8 +65,9 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
                         ))
                     ) : (
                         <div
-                            onDragOver={(e) => handleDragOver(e, "card", column.id || "")}
-                            onDragLeave={() => handleDragLeave("card", column.id )}>
+                            onDragOver={(e) => handleDragOver(e, CARD_DROP_INDICATOR_LABEL, column.id || "")}
+                            onDragLeave={() => handleDragLeave(CARD_DROP_INDICATOR_LABEL, column.id)}
+                            onDrop={(e) => handleDragEnd(e)}>
                             {cards.map((card) => (
                                 <Card key={card.id} card={card} />
                             ))}

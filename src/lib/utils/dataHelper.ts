@@ -1,4 +1,4 @@
-import { ColumnProps } from "@/types/boardType"
+import { CardProps, ColumnProps } from "@/types/boardType"
 import { supabase } from "../supabaseClient"
 
 //-----------------------------------------Columns------------------------------------------//
@@ -64,6 +64,21 @@ export const updateColumnOrder = async (columns: ColumnProps[]) => {
 }
 
 //-----------------------------------------Cards------------------------------------------//
+
+export const updateCardOrder = async (cards: CardProps[]) => {
+    const updateCards = cards.map((card, index) => ({
+        id: card.id,
+        message: card.message,
+        column_id: card.columnId,
+        order: index + 1
+    }))
+
+    const { error } = await supabase
+        .from('cards')
+        .upsert(updateCards, { onConflict: 'id' })
+
+    if (error) console.error('Order update failed', error)
+}
 
 export const renameField = async (data: any) => {
 
