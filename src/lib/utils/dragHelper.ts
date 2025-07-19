@@ -1,23 +1,27 @@
 import { DragEvent } from "react";
-import { ColumnProps } from "../../types/boardType";
+import { CardProps, ColumnProps } from "../../types/boardType";
 
 
 //---------------------------Handle Drag Functions---------------------------//
 
-export const handleDragStart = (e: DragEvent<HTMLDivElement>, dataLabel: string, data: ColumnProps) => {
+export const handleDragStart = (e: DragEvent<HTMLDivElement>, dataLabel: string, data: ColumnProps | CardProps) => {
     e.dataTransfer.setData(dataLabel, data.id);
     // if (dataLabel === "columnId") {
     //     setIsCardDisabled(true);
     // }
 }
 
-export const handleDragOver = (e: DragEvent<HTMLDivElement>, type: string) => {
+export const handleDragOver = (e: DragEvent<HTMLDivElement>, type: string, columnId?: string) => {
     e.preventDefault();
 
     // if (isCardDisabled || type === "board") {
-    highlightIndicator(e, type);
+    highlightIndicator(e, type, columnId);
     // setActive(true);
     // }
+}
+
+export const handleDragLeave = (type: string) => {
+    clearHighlights(type);
 }
 
 export const handleDragEnd = (e: DragEvent<HTMLDivElement>, type: string, columns: ColumnProps[]) => {
@@ -27,7 +31,7 @@ export const handleDragEnd = (e: DragEvent<HTMLDivElement>, type: string, column
 
     const columnId = e.dataTransfer.getData("columnId");
     const indicators = getIndicators(type);
-    const { element } = getNearestIndicator(e, indicators as HTMLDivElement[]);
+    const { element } = getNearestIndicator(e, indicators as HTMLDivElement[], type);
 
     const before = element.dataset.before || "-1";
 
@@ -59,12 +63,13 @@ export const handleDragEnd = (e: DragEvent<HTMLDivElement>, type: string, column
 
 export const getNearestIndicator = (
     e: DragEvent<HTMLDivElement>,
-    indicators: HTMLDivElement[]
+    indicators: HTMLDivElement[],
+    type: string
 ): { offset: number; element: HTMLDivElement } => {
     return indicators.reduce(
         (closest, child) => {
             const box = child.getBoundingClientRect();
-            const offset = e.clientX - (box.left + 50);
+            const offset = type === "card" ? e.clientY - (box.top + 50) : e.clientX - (box.left + 50);
 
             if (offset < 0 && offset > closest.offset) {
                 return { offset, element: child };
@@ -81,7 +86,7 @@ export const getNearestIndicator = (
 export const highlightIndicator = (e: DragEvent<HTMLDivElement>, type: string, column?: string) => {
     const indicators = getIndicators(type, column);
     clearHighlights(type, indicators, column);
-    const el = getNearestIndicator(e, indicators);
+    const el = getNearestIndicator(e, indicators, type);
     el.element.style.opacity = "1";
 };
 

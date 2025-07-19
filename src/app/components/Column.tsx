@@ -8,6 +8,7 @@ import Card from "./Card";
 import CardDropIndicator from "./CardDropIndicator";
 import AddCard from "./AddCard";
 import LoadingCard from "./LoadingCard";
+import { handleDragLeave, handleDragOver } from "@/lib/utils/dragHelper";
 
 interface ColumnsProps {
     column: ColumnProps;
@@ -42,7 +43,7 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
                     onDragStart={(e) => handleDragStart(e, "columnId", column)}
                     className="min-w-[300px] p-4 rounded"
                 >
-                    <h2 className={`${column.headingColor} font-semibold`}>{column.title}</h2>
+                    <h2 className={column?.headingColor}>{column.title}</h2>
                     <hr className="my-4 text-neutral-400/20" />
                 </motion.div>
                 <div>
@@ -51,13 +52,15 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
                             <LoadingCard key={i} />
                         ))
                     ) : (
-                        <>
+                        <div
+                            onDragOver={(e) => handleDragOver(e, "card", column.id || "")}
+                            onDragLeave={() => handleDragLeave("card")}>
                             {cards.map((card) => (
                                 <Card key={card.id} card={card} />
                             ))}
                             <CardDropIndicator beforeId={"-1"} column={column.id} />
                             <AddCard columnId={column.id} onCardAdded={fetchDataByColumnId} />
-                        </>
+                        </div>
                     )}
                 </div>
             </div>

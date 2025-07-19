@@ -58,12 +58,23 @@ export const updateColumnOrder = async (columns: ColumnProps[]) => {
 
     const { error } = await supabase
         .from('columns')
-        .upsert(updateColumns, {onConflict: 'id'})
+        .upsert(updateColumns, { onConflict: 'id' })
 
     if (error) console.error('Order update failed', error)
 }
 
 //-----------------------------------------Cards------------------------------------------//
+
+export const renameField = async (data: any) => {
+
+    const transformedCards = data.map((card: any) => ({
+        ...card,
+        columnId: card.column_id, // rename column_id to columnId
+    }));
+
+    return transformedCards
+
+}
 export const fetchCards = async () => {
     const { data, error } = await supabase
         .from('cards')
@@ -72,7 +83,7 @@ export const fetchCards = async () => {
 
     if (error) console.error('Fetch error:', error)
     else {
-        return data
+        return renameField(data)
     }
 }
 
@@ -85,7 +96,7 @@ export const fetchCardsByColumnId = async (columnId: string) => {
 
     if (error) console.error('Fetch error:', error)
     else {
-        return data
+        return renameField(data)
     }
 }
 

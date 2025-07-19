@@ -25,14 +25,13 @@ export default function Board() {
 
         const fetchedCards = await fetchCards();
         if (fetchedCards) {
-            console.log(fetchedCards);
             setCards(fetchedCards);
         }
         setLoading(false); // ← Stop loading
     }
 
     const handleAddColumn = async () => {
-        await addColumn(`Column ${columns.length + 1}`, "text-neutral-600");
+        await addColumn(`Column ${columns.length + 1}`, "text-blue-600");
         fetchData();
     }
 
@@ -47,22 +46,27 @@ export default function Board() {
 
     return (
         <div className="flex gap-4 m-20"
-            onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
-            onDrop={handleColumnDragEnd}>
+            // onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
+            // onDrop={handleColumnDragEnd}
+            >
             {loading ? (
                 <div className="flex justify-center items-center w-full">
                     <LoadingSpinner />
                 </div>
             ) : (
-                <>
-                    {columns.map((column) => (
-                        <Column key={column.id} column={column} handleDragStart={handleDragStart} />
+                <div
+                    className="flex"
+                    // onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
+                    // onDrop={handleColumnDragEnd}
+                    >
+                    {columns.map((column, index) => (
+                        <Column key={column.id} column={column} handleDragStart={handleDragStart} index={index} />
                     ))}
-                    <ColumnDropIndicator beforeId={"-1"} />
+                    {/* <ColumnDropIndicator beforeId={"-1"} /> */}
                     <div className="mt-4">
                         <h2 onClick={handleAddColumn} className="flex items-center p-2 text-xs text-nowrap text-gray-400 mx-5 cursor-pointer hover:text-violet-400">Add Column</h2>
                     </div>
-                </>
+                </div>
             )}
         </div>
     );

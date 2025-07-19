@@ -2,6 +2,8 @@ import { CardProps } from "@/types/boardType"
 import { motion } from "framer-motion";
 import CardDropIndicator from "./CardDropIndicator";
 import { useState } from "react";
+import { handleDragStart } from "@/lib/utils/dragHelper";
+import { DragEvent } from "react";
 
 interface DisplayCardProps {
     card: CardProps
@@ -10,15 +12,22 @@ interface DisplayCardProps {
 export default function Card({ card }: DisplayCardProps) {
     const [active, setActive] = useState(false);
 
+
+    const handleCardDragStart = (e: DragEvent<HTMLDivElement>) => {
+        setActive(false);
+        handleDragStart(e, "cardId", card);
+    }
+
     return (
         <>
             <CardDropIndicator beforeId={card.id} column={card.columnId} />
             <motion.div
                 layout
-                layoutId={card.columnId}
+                layoutId={card.id}
                 draggable
                 onMouseEnter={() => setActive(true)}
                 onMouseLeave={() => setActive(false)}
+                onDragStart={(e) => handleCardDragStart(e)}
                 className="relative cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing">
                 <p className="text-sm text-neutral-100">
                     {card.message}
