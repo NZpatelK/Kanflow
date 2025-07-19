@@ -20,8 +20,8 @@ export const handleDragOver = (e: DragEvent<HTMLDivElement>, type: string, colum
     // }
 }
 
-export const handleDragLeave = (type: string) => {
-    clearHighlights(type);
+export const handleDragLeave = (type: string, columnId?: string) => {
+    clearHighlights(type, undefined, columnId);
 }
 
 export const handleDragEnd = (e: DragEvent<HTMLDivElement>, type: string, columns: ColumnProps[]) => {

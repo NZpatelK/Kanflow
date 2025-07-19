@@ -59,8 +59,8 @@ export default function Board() {
                     // onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
                     // onDrop={handleColumnDragEnd}
                     >
-                    {columns.map((column, index) => (
-                        <Column key={column.id} column={column} handleDragStart={handleDragStart} index={index} />
+                    {columns.map((column) => (
+                        <Column key={column.id} column={column} handleDragStart={handleDragStart}/>
                     ))}
                     {/* <ColumnDropIndicator beforeId={"-1"} /> */}
                     <div className="mt-4">

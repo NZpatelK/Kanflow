@@ -54,7 +54,7 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
                     ) : (
                         <div
                             onDragOver={(e) => handleDragOver(e, "card", column.id || "")}
-                            onDragLeave={() => handleDragLeave("card")}>
+                            onDragLeave={() => handleDragLeave("card", column.id )}>
                             {cards.map((card) => (
                                 <Card key={card.id} card={card} />
                             ))}
