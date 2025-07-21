@@ -8,6 +8,6 @@ export default function CardDropIndicator({ beforeId, column }: DropIndicatorPro
         <div
             data-before={beforeId || "-1"}
             data-column={column}
-            className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0"></div>
+            className="my-1 h-0.5 w-full bg-violet-400 opacity-0"></div>
     )
 }

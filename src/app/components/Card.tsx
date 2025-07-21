@@ -1,9 +1,10 @@
 import { CardProps } from "@/types/boardType"
 import { motion } from "framer-motion";
 import CardDropIndicator from "./CardDropIndicator";
-import { useState } from "react";
 import { handleDragStart } from "@/lib/utils/dragHelper";
-import { DragEvent } from "react";
+import { DragEvent, useState } from "react";
+
+
 
 interface DisplayCardProps {
     card: CardProps
@@ -11,7 +12,6 @@ interface DisplayCardProps {
 
 export default function Card({ card }: DisplayCardProps) {
     const [active, setActive] = useState(false);
-
 
     const handleCardDragStart = (e: DragEvent<HTMLDivElement>) => {
         setActive(false);

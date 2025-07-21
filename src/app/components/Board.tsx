@@ -1,4 +1,4 @@
-import { handleDragEnd, handleDragOver, handleDragStart } from "@/lib/utils/dragHelper"
+import { handleDragEnd, handleDragOver} from "@/lib/utils/dragHelper"
 import { CardProps, ColumnProps } from "@/types/boardType"
 import Column from "./Column"
 import ColumnDropIndicator from "./ColumnDropIndicator"
@@ -8,9 +8,10 @@ import LoadingSpinner from "./LoadingSpinner"
 
 export default function Board() {
     const DROP_INDICATOR_LABEL = "board";
+
     const [columns, setColumns] = useState<ColumnProps[]>([]);
     const [cards, setCards] = useState<CardProps[]>([]);
-    const [loading, setLoading] = useState<boolean>(true); // ← Add loading state
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         fetchData(true);

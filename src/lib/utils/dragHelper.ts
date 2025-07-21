@@ -2,15 +2,18 @@ import { DragEvent } from "react";
 import { CardProps, ColumnProps } from "../../types/boardType";
 import { fetchCards } from "./dataHelper";
 
-
 //---------------------------Handle Drag Functions---------------------------//
+let currentActive = '';
 
 export const handleDragStart = (e: DragEvent<HTMLDivElement>, dataLabel: string, data: ColumnProps | CardProps) => {
     e.dataTransfer.setData(dataLabel, data.id);
+    currentActive = dataLabel === "columnId" ? "board" : "card";
 }
 
 export const handleDragOver = (e: DragEvent<HTMLDivElement>, type: string, columnId?: string) => {
     e.preventDefault();
+    console.log(currentActive, type);
+    if(currentActive !== type) return;
     highlightIndicator(e, type, columnId);
   
 }
@@ -71,7 +74,6 @@ export const handleCardDragEnd = async (e: DragEvent<HTMLDivElement>, type: stri
         let cardToTransfer = copy.find((c) => c.id === cardId);
         if (!cardToTransfer) return;
         cardToTransfer = { ...cardToTransfer, columnId: columnId };
-        console.log(cardToTransfer);
 
         copy = copy.filter((c) => c.id !== cardId);
 
