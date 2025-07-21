@@ -60,7 +60,7 @@ export default function Board() {
                     // onDrop={handleColumnDragEnd}
                     >
                     {columns.map((column) => (
-                        <Column key={column.id} column={column} handleDragStart={handleDragStart}/>
+                        <Column key={column.id} column={column} handleDragStart={handleDragStart} fetchData={fetchData}/>
                     ))}
                     {/* <ColumnDropIndicator beforeId={"-1"} /> */}
                     <div className="mt-4">

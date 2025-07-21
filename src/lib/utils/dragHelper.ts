@@ -1,23 +1,18 @@
 import { DragEvent } from "react";
 import { CardProps, ColumnProps } from "../../types/boardType";
+import { fetchCards } from "./dataHelper";
 
 
 //---------------------------Handle Drag Functions---------------------------//
 
 export const handleDragStart = (e: DragEvent<HTMLDivElement>, dataLabel: string, data: ColumnProps | CardProps) => {
     e.dataTransfer.setData(dataLabel, data.id);
-    // if (dataLabel === "columnId") {
-    //     setIsCardDisabled(true);
-    // }
 }
 
 export const handleDragOver = (e: DragEvent<HTMLDivElement>, type: string, columnId?: string) => {
     e.preventDefault();
-
-    // if (isCardDisabled || type === "board") {
     highlightIndicator(e, type, columnId);
-    // setActive(true);
-    // }
+  
 }
 
 export const handleDragLeave = (type: string, columnId?: string) => {
@@ -59,13 +54,14 @@ export const handleDragEnd = (e: DragEvent<HTMLDivElement>, type: string, column
     }
 }
 
-export const handleCardDragEnd = (e: DragEvent<HTMLDivElement>, type: string, columnId: string, card: CardProps[]) => {
+export const handleCardDragEnd = async (e: DragEvent<HTMLDivElement>, type: string, columnId: string, cardquery: CardProps[]) => {
     e.preventDefault();
-    clearHighlights(type);
+    clearHighlights(type, undefined, columnId);
 
     const cardId = e.dataTransfer.getData("cardId");
     const indicators = getIndicators(type, columnId);
     const { element } = getNearestIndicator(e, indicators as HTMLDivElement[], type);
+    const card = await fetchCards();
 
     const before = element.dataset.before || "-1";
 
@@ -75,6 +71,7 @@ export const handleCardDragEnd = (e: DragEvent<HTMLDivElement>, type: string, co
         let cardToTransfer = copy.find((c) => c.id === cardId);
         if (!cardToTransfer) return;
         cardToTransfer = { ...cardToTransfer, columnId: columnId };
+        console.log(cardToTransfer);
 
         copy = copy.filter((c) => c.id !== cardId);
 
@@ -88,8 +85,6 @@ export const handleCardDragEnd = (e: DragEvent<HTMLDivElement>, type: string, co
 
             copy.splice(insertAtIndex, 0, cardToTransfer);
         }
-
-        console.log("updateCards" ,copy);
 
         return copy;
     }

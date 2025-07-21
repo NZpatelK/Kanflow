@@ -12,10 +12,11 @@ import { handleCardDragEnd, handleDragLeave, handleDragOver } from "@/lib/utils/
 
 interface ColumnsProps {
     column: ColumnProps;
-    handleDragStart: (e: DragEvent<HTMLDivElement>, dataLabel: string, data: ColumnProps) => void
+    handleDragStart: (e: DragEvent<HTMLDivElement>, dataLabel: string, data: ColumnProps) => void;
+    fetchData(): Promise<void>;
 }
 
-export default function Column({ column, handleDragStart }: ColumnsProps) {
+export default function Column({ column, handleDragStart, fetchData }: ColumnsProps) {
     const CARD_DROP_INDICATOR_LABEL = "card";
 
     const [cards, setCards] = useState<CardProps[]>([]);
@@ -35,12 +36,12 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
     };
 
     const handleDragEnd = async (e: DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        // console.log(  "updateCards",fetchCardsData);
-        const updateCards = handleCardDragEnd(e, CARD_DROP_INDICATOR_LABEL, column.id , cards);
+        // const fetchCardsData = await fetchCards();
+        const updateCards = await handleCardDragEnd(e, CARD_DROP_INDICATOR_LABEL, column.id , cards) as CardProps[];
+
         if (updateCards) {
-            setCards(updateCards);
             updateCardOrder(updateCards);
+            fetchData();
         }
     }
 
@@ -52,7 +53,7 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
                     layout
                     layoutId={column.id}
                     draggable
-                    onDragStart={(e) => handleDragStart(e, "columnId", column)}
+                    // onDragStart={(e) => handleDragStart(e, "columnId", column)}
                     className="min-w-[300px] p-4 rounded"
                 >
                     <h2 className={column?.headingColor}>{column.title}</h2>
@@ -65,7 +66,7 @@ export default function Column({ column, handleDragStart }: ColumnsProps) {
                         ))
                     ) : (
                         <div
-                            onDragOver={(e) => handleDragOver(e, CARD_DROP_INDICATOR_LABEL, column.id || "")}
+                            onDragOver={(e) => handleDragOver(e, CARD_DROP_INDICATOR_LABEL, column.id)}
                             onDragLeave={() => handleDragLeave(CARD_DROP_INDICATOR_LABEL, column.id)}
                             onDrop={(e) => handleDragEnd(e)}>
                             {cards.map((card) => (
