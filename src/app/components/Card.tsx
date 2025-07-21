@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import CardDropIndicator from "./CardDropIndicator";
 import { handleDragStart } from "@/lib/utils/dragHelper";
 import { DragEvent, useState } from "react";
+import { FiTrash } from "react-icons/fi";
+import { RiEditLine } from "react-icons/ri";
 
 
 
@@ -33,10 +35,17 @@ export default function Card({ card }: DisplayCardProps) {
                     {card.message}
                 </p>
                 <div
-                    // onClick={() => handleDeleteCard(id)}
-                    className={`group absolute rounded top-1/2 right-2 transition duration-300 bg-gray-900 hover:bg-red-900 p-2 border border-neutral-700 hover:border-red-700 -translate-y-1/2 flex gap-2 ${active ? "opacity-100" : "opacity-0"}`}>
-                    {/* <FiTrash className="text-neutral-500 group-hover:text-red-600 transition duration-300" /> */}
-                    <span className="text-neutral-500 text-xs group-hover:text-red-600 transition duration-300">Delete</span>
+                    className={`absolute top-1/2 right-2 -translate-y-1/2 transition duration-300 flex ${active ? "opacity-100" : "opacity-0"}`}>
+                    <div
+                        // onClick={() => handleDeleteCard(id)}
+                        className={`group rounded-tl rounded-bl bg-gray-900 hover:bg-blue-900 p-2 border border-neutral-700 hover:border-blue-700`}>
+                        <RiEditLine className="text-neutral-500 group-hover:text-blue-600 transition duration-300" />
+                    </div>
+                    <div
+                        // onClick={() => handleDeleteCard(id)}
+                        className={`group rounded-tr rounded-br bg-gray-900 hover:bg-red-900 p-2 border border-neutral-700 hover:border-red-700`}>
+                        <FiTrash className="text-neutral-500 group-hover:text-red-600 transition duration-300" />
+                    </div>
                 </div>
             </motion.div>
         </>
