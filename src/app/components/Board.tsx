@@ -13,11 +13,12 @@ export default function Board() {
     const [loading, setLoading] = useState<boolean>(true); // ← Add loading state
 
     useEffect(() => {
-        fetchData();
+        fetchData(true);
     }, []);
 
-    const fetchData = async () => {
-        setLoading(true); // ← Start loading
+    const fetchData = async (needLoading: boolean = false) => {
+        setLoading(needLoading);
+
         const fetchedColumns = await fetchColumns();
         if (fetchedColumns) {
             setColumns(fetchedColumns);
@@ -38,6 +39,7 @@ export default function Board() {
     const handleColumnDragEnd = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         const updateColumns = handleDragEnd(e, DROP_INDICATOR_LABEL, columns) as ColumnProps[];
+
         if (updateColumns) {
             setColumns(updateColumns);
             updateColumnOrder(updateColumns);
@@ -46,9 +48,9 @@ export default function Board() {
 
     return (
         <div className="flex gap-4 m-20"
-            // onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
-            // onDrop={handleColumnDragEnd}
-            >
+        onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
+        onDrop={handleColumnDragEnd}
+        >
             {loading ? (
                 <div className="flex justify-center items-center w-full">
                     <LoadingSpinner />
@@ -56,13 +58,11 @@ export default function Board() {
             ) : (
                 <div
                     className="flex"
-                    // onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
-                    // onDrop={handleColumnDragEnd}
-                    >
+                >
                     {columns.map((column) => (
-                        <Column key={column.id} column={column} handleDragStart={handleDragStart} fetchData={fetchData}/>
+                        <Column key={column.id} column={column} fetchData={fetchData} cards={cards} setCards={setCards} />
                     ))}
-                    {/* <ColumnDropIndicator beforeId={"-1"} /> */}
+                    <ColumnDropIndicator beforeId={"-1"} />
                     <div className="mt-4">
                         <h2 onClick={handleAddColumn} className="flex items-center p-2 text-xs text-nowrap text-gray-400 mx-5 cursor-pointer hover:text-violet-400">Add Column</h2>
                     </div>

@@ -72,9 +72,7 @@ export const updateCardOrder = async (cards: CardProps[]) => {
         column_id: card.columnId,
         order: index + 1
     }))
-
-    console.log("database" ,updateCards)
-
+    
     const { error } = await supabase
         .from('cards')
         .upsert(updateCards, { onConflict: 'id' })
