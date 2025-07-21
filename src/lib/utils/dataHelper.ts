@@ -143,3 +143,8 @@ export const addCard = async (message: string, columnId: string) => {
         console.error('Insert failed:', error)
     }
 }
+
+export const deleteCard = async (cardId: string) => {
+    const { error } = await supabase.from('cards').delete().eq('id', cardId)
+    if (error) console.error('Delete failed:', error)
+}

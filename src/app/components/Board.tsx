@@ -33,7 +33,7 @@ export default function Board() {
     }
 
     const handleAddColumn = async () => {
-        await addColumn(`Column ${columns.length + 1}`, "text-blue-600");
+        await addColumn(`Column ${columns.length + 1}`, "text-yellow-200");
         fetchData();
     }
 

@@ -2,8 +2,8 @@
 import { motion } from "framer-motion";
 import { CardProps, ColumnProps } from "@/types/boardType";
 import ColumnDropIndicator from "./ColumnDropIndicator";
-import { Dispatch, DragEvent, SetStateAction, useEffect, useState } from "react";
-import { fetchCards, fetchCardsByColumnId, updateCardOrder } from "@/lib/utils/dataHelper";
+import { Dispatch, DragEvent, SetStateAction } from "react";
+import { updateCardOrder } from "@/lib/utils/dataHelper";
 import Card from "./Card";
 import CardDropIndicator from "./CardDropIndicator";
 import AddCard from "./AddCard";
@@ -14,7 +14,6 @@ interface ColumnsProps {
     column: ColumnProps;
     cards: CardProps[];
     setCards: Dispatch<SetStateAction<CardProps[]>>;
-    // handleDragStart: (e: DragEvent<HTMLDivElement>, dataLabel: string, data: ColumnProps) => void;
     fetchData(): Promise<void>;
 }
 
@@ -56,7 +55,7 @@ export default function Column({ column, fetchData, cards, setCards }: ColumnsPr
                             onDragLeave={() => handleDragLeave(CARD_DROP_INDICATOR_LABEL, column.id)}
                             onDrop={(e) => handleDragEnd(e)}>
                             {filteredCards.map((card) => (
-                                <Card key={card.id} card={card} />
+                                <Card key={card.id} card={card} fetchData={fetchData} />
                             ))}
                             <CardDropIndicator beforeId={"-1"} column={column.id} />
                             <AddCard columnId={column.id} onCardAdded={fetchData} />

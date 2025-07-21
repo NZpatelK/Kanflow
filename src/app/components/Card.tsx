@@ -5,19 +5,26 @@ import { handleDragStart } from "@/lib/utils/dragHelper";
 import { DragEvent, useState } from "react";
 import { FiTrash } from "react-icons/fi";
 import { RiEditLine } from "react-icons/ri";
+import { deleteCard } from "@/lib/utils/dataHelper";
 
 
 
 interface DisplayCardProps {
     card: CardProps
+    fetchData(): Promise<void>;
 }
 
-export default function Card({ card }: DisplayCardProps) {
+export default function Card({ card, fetchData }: DisplayCardProps) {
     const [active, setActive] = useState(false);
 
     const handleCardDragStart = (e: DragEvent<HTMLDivElement>) => {
         setActive(false);
         handleDragStart(e, "cardId", card);
+    }
+
+    const handleDeleteCard = (id: string) => {
+        deleteCard(id);
+        fetchData();
     }
 
     return (
@@ -42,7 +49,7 @@ export default function Card({ card }: DisplayCardProps) {
                         <RiEditLine className="text-neutral-500 group-hover:text-blue-600 transition duration-300" />
                     </div>
                     <div
-                        // onClick={() => handleDeleteCard(id)}
+                        onClick={() => handleDeleteCard(card.id)}
                         className={`group rounded-tr rounded-br bg-gray-900 hover:bg-red-900 p-2 border border-neutral-700 hover:border-red-700`}>
                         <FiTrash className="text-neutral-500 group-hover:text-red-600 transition duration-300" />
                     </div>
