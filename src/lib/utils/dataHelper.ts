@@ -65,21 +65,6 @@ export const updateColumnOrder = async (columns: ColumnProps[]) => {
 
 //-----------------------------------------Cards------------------------------------------//
 
-export const updateCardOrder = async (cards: CardProps[]) => {
-    const updateCards = cards.map((card, index) => ({
-        id: card.id,
-        message: card.message,
-        column_id: card.columnId,
-        order: index + 1
-    }))
-    
-    const { error } = await supabase
-        .from('cards')
-        .upsert(updateCards, { onConflict: 'id' })
-
-    if (error) console.error('Order update failed', error)
-}
-
 export const renameField = async (data: any) => {
 
     const transformedCards = data.map((card: any) => ({
@@ -144,7 +129,23 @@ export const addCard = async (message: string, columnId: string) => {
     }
 }
 
+export const updateCardOrder = async (cards: CardProps[]) => {
+    const updateCards = cards.map((card, index) => ({
+        id: card.id,
+        message: card.message,
+        column_id: card.columnId,
+        order: index + 1
+    }))
+
+    const { error } = await supabase
+        .from('cards')
+        .upsert(updateCards, { onConflict: 'id' })
+
+    if (error) console.error('Order update failed', error)
+}
+
 export const deleteCard = async (cardId: string) => {
     const { error } = await supabase.from('cards').delete().eq('id', cardId)
     if (error) console.error('Delete failed:', error)
 }
+
