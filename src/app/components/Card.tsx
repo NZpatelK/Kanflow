@@ -50,11 +50,13 @@ export default function Card({ card, fetchData }: DisplayCardProps) {
     }
 
     const handleUpdateMessage = async () => {
-        alert ("Saving...")
-        setIsEditing(false);
-        card.message = message
-        await updateCard(card);
-        fetchData();
+        if (isEditing) {
+            card.message = message
+            await updateCard(card);
+            fetchData();
+        }
+
+        setIsEditing(!isEditing);
     }
 
     return (
@@ -83,7 +85,7 @@ export default function Card({ card, fetchData }: DisplayCardProps) {
                         }`}
                 >
                     <div
-                        onClick={() => setIsEditing(!isEditing)}
+                        onClick={() => handleUpdateMessage()}
                         className="group rounded-tl rounded-bl bg-gray-900 hover:bg-blue-900 p-2 border border-neutral-700 hover:border-blue-700"
                     >
                         <RiEditLine className="text-neutral-500 group-hover:text-blue-600 transition duration-300" />
