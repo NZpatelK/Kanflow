@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { CardProps, ColumnProps } from "@/types/boardType";
 import ColumnDropIndicator from "./ColumnDropIndicator";
 import { Dispatch, DragEvent, SetStateAction, useEffect, useRef, useState } from "react";
-import { deleteColumn, updateCardOrder } from "@/lib/utils/dataHelper";
+import { deleteColumn, updateCardOrder, updateColumn } from "@/lib/utils/dataHelper";
 import Card from "./Card";
 import CardDropIndicator from "./CardDropIndicator";
 import AddCard from "./AddCard";
@@ -35,7 +35,7 @@ export default function Column({ column, fetchData, cards, setCards }: ColumnsPr
                 !inputRef.current.contains(event.target as Node) &&
                 isEditing
             ) {
-                // handleUpdateMessage();
+                handleColumnUpdate();
             }
         };
 
@@ -53,6 +53,16 @@ export default function Column({ column, fetchData, cards, setCards }: ColumnsPr
             updateCardOrder(updateCards);
             setCards(updateCards);
         }
+    }
+
+    const handleColumnUpdate = async () => {
+        if (isEditing) {
+            column.title = title
+            await updateColumn(column);
+            fetchData();
+        }
+
+        setIsEditing(!isEditing);
     }
 
     const handleColumnDelete = async (id: string) => {
@@ -81,13 +91,13 @@ export default function Column({ column, fetchData, cards, setCards }: ColumnsPr
                             className={`w-full p-3 rounded focus:outline-0 ${isEditing ? "border-2 border-blue-500 bg-blue-400/30" : ""}`}
                             value={title}
                             readOnly={!isEditing}
-                        // onChange={(e) => { }}
+                            onChange={(e) => { setTitle(e.target.value) }}
                         />
                         <div
                             className={`absolute top-1/2 right-2 -translate-y-1/2 transition duration-300 flex ${active ? "opacity-100" : "opacity-0"}`}
                         >
                             <div
-                                // onClick={() => handleUpdateMessage()}
+                                onClick={() => handleColumnUpdate()}
                                 className="group rounded-tl rounded-bl bg-gray-900 hover:bg-blue-900 p-2 border border-neutral-700 hover:border-blue-700"
                             >
                                 <RiEditLine className="text-neutral-500 group-hover:text-blue-600 transition duration-300" />

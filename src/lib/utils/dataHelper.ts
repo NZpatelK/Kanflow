@@ -63,6 +63,17 @@ export const updateColumnOrder = async (columns: ColumnProps[]) => {
     if (error) console.error('Order update failed', error)
 }
 
+export const updateColumn = async (column: ColumnProps) => {
+    const { error } = await supabase
+        .from('columns')
+        .update({
+            title: column.title,
+            heading_color: column.headingColor,
+        })
+        .eq('id', column.id)
+    if (error) console.error('Update failed:', error)
+}
+
 export const deleteColumn = async (columnId: string) => {
     const { error } = await supabase.from('columns').delete().eq('id', columnId)
     if (error) console.error('Delete failed:', error)
