@@ -65,7 +65,7 @@ export default function Board() {
                     ))}
                     <ColumnDropIndicator beforeId={"-1"} />
                     <div className="mt-4">
-                        <h2 onClick={handleAddColumn} className="flex items-center p-2 text-xs text-nowrap text-gray-400 mx-5 cursor-pointer hover:text-violet-400">Add Column</h2>
+                        <h2 onClick={handleAddColumn} className="flex items-center p-2 text-xs text-nowrap text-gray-400 mx-5 cursor-pointer hover:text-violet-400 hover:scale-110 transition-all">Add Column</h2>
                     </div>
                 </div>
             )}

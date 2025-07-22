@@ -81,13 +81,13 @@ export default function Column({ column, fetchData, cards, setCards }: ColumnsPr
                     onDragStart={(e) => { handleDragStart(e, "columnId", column); setActive(false) }}
                     onMouseEnter={() => setActive(true)}
                     onMouseLeave={() => setActive(false)}
-                    className="min-w-[300px] p-4 rounded"
+                    className="min-w-[300px] p-3 rounded"
                 >
                     <div className="relative">
                         <input
                             ref={inputRef}
                             type="text"
-                            className={`w-full p-3 rounded font-bold focus:outline-0 ${column?.headingColor} ${isEditing ? "border-2 border-blue-500 bg-blue-400/30" : ""}`}
+                            className={`w-full p-3 rounded font-bold focus:outline-0 text-neutral-200 ${isEditing ? "border-2 border-blue-500 bg-blue-400/30" : ""}`}
                             value={title}
                             readOnly={!isEditing}
                             onChange={(e) => { setTitle(e.target.value) }}
