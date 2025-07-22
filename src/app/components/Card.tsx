@@ -69,7 +69,7 @@ export default function Card({ card, fetchData }: DisplayCardProps) {
             <motion.div
                 layout
                 layoutId={card.id}
-                draggable
+                draggable={!isEditing}
                 onMouseEnter={() => setActive(true)}
                 onMouseLeave={() => setActive(false)}
                 onDragStart={(e) => handleCardDragStart(e)}
@@ -86,7 +86,7 @@ export default function Card({ card, fetchData }: DisplayCardProps) {
                         e.target.style.height = `${e.target.scrollHeight}px`;
                     }}
                     rows={1}
-                    className={`w-full h-full resize-none overflow-hidden p-3 rounded focus:outline-0  ${isEditing ? "border-2 border-blue-500 bg-blue-400/30" : "cursor-grab active:cursor-grabbing border border-neutral-700 bg-neutral-800"}`}
+                    className={`w-full h-full resize-none overflow-hidden p-3 rounded focus:outline-0  ${isEditing ? "border-2 border-blue-500 bg-blue-400/30" : "cursor-grab  active:cursor-grabbing border border-neutral-700 bg-neutral-800 select-none"}`}
                 />
                 <div
                     className={`absolute top-2 right-2 transition duration-300 flex ${active ? "opacity-100" : "opacity-0"}`}
