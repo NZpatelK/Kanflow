@@ -1,6 +1,7 @@
 import { addCard } from "@/lib/utils/dataHelper";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface AddCardProps {
     columnId: string
@@ -13,7 +14,17 @@ export default function AddCard({ columnId, onCardAdded }: AddCardProps) {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await addCard(message, columnId);
+        await toast.promise(
+            addCard(message, columnId),
+            {
+                pending: 'Adding card...',
+                success: 'Card added successfully! 🎉',
+                error: 'Failed to add card 😞',
+            },
+            {
+                autoClose: 1500,
+            }
+        );
         setAdding(false);
         setMessage("");
         onCardAdded();

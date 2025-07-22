@@ -6,6 +6,7 @@ import { DragEvent, useEffect, useRef, useState } from "react";
 import { FiTrash } from "react-icons/fi";
 import { RiEditLine } from "react-icons/ri";
 import { deleteCard, updateCard } from "@/lib/utils/dataHelper";
+import { toast } from "react-toastify";
 
 
 
@@ -49,14 +50,34 @@ export default function Card({ card, fetchData }: DisplayCardProps) {
     }
 
     const handleDeleteCard = (id: string) => {
-        deleteCard(id);
+        toast.promise(
+            deleteCard(id),
+            {
+                pending: 'Deleting card...',
+                success: 'Card deleted successfully! ✅',
+                error: 'Failed to delete card 😞',
+            },
+            {
+                autoClose: 1500,
+            }
+        );
         fetchData();
     }
 
     const handleUpdateMessage = async () => {
         if (isEditing) {
             card.message = message
-            await updateCard(card);
+            await toast.promise(
+                updateCard(card),
+                {
+                    pending: 'Updating card...',
+                    success: 'Card updated successfully! 🎉',
+                    error: 'Failed to update card 😞',
+                },
+                {
+                    autoClose: 1500,
+                }
+            );
             fetchData();
         }
 

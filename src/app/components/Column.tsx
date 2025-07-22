@@ -11,6 +11,7 @@ import LoadingCard from "./LoadingCard";
 import { handleCardDragEnd, handleDragLeave, handleDragOver, handleDragStart } from "@/lib/utils/dragHelper";
 import { RiEditLine } from "react-icons/ri";
 import { FiTrash } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 interface ColumnsProps {
     column: ColumnProps;
@@ -58,7 +59,17 @@ export default function Column({ column, fetchData, cards, setCards }: ColumnsPr
     const handleColumnUpdate = async () => {
         if (isEditing) {
             column.title = title
-            await updateColumn(column);
+            await toast.promise(
+                updateColumn(column),
+                {
+                    pending: 'Updating column...',
+                    success: 'Column updated successfully! 🎉',
+                    error: 'Failed to update column 😞',
+                },
+                {
+                    autoClose: 1500,
+                }
+            );
             fetchData();
         }
 
@@ -66,7 +77,17 @@ export default function Column({ column, fetchData, cards, setCards }: ColumnsPr
     }
 
     const handleColumnDelete = async (id: string) => {
-        await deleteColumn(id);
+        await toast.promise(
+            deleteColumn(id),
+            {
+                pending: 'Deleting column...',
+                success: 'Column deleted successfully! ✅',
+                error: 'Failed to delete column 😞',
+            },
+            {
+                autoClose: 1500
+            }
+        );
         fetchData();
     }
 

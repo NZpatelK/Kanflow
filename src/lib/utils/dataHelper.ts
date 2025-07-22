@@ -1,5 +1,8 @@
 import { CardProps, ColumnProps } from "@/types/boardType"
 import { supabase } from "../supabaseClient"
+import { toast } from 'react-toastify';
+
+
 
 //-----------------------------------------Columns------------------------------------------//
 export const fetchColumns = async () => {
@@ -21,18 +24,21 @@ export const fetchColumns = async () => {
 }
 
 export const addColumn = async (title: string, headingColor: string) => {
-    if (!title) return
+    if (!title) return Promise.reject(new Error("Title is required"));
 
     // Get current max order to place new column at the end
     const { data: existing, error: fetchError } = await supabase
         .from('columns')
         .select('order')
         .order('order', { ascending: false })
-        .limit(1)
+        .limit(1);
 
-    if (fetchError) console.error('Fetch error:', fetchError)
+    if (fetchError) {
+        console.error('Fetch error:', fetchError);
+        return Promise.reject(fetchError);
+    }
 
-    const nextOrder = existing?.[0]?.order + 1 || 1
+    const nextOrder = existing?.[0]?.order + 1 || 1;
 
     const { error } = await supabase.from('columns').insert([
         {
@@ -41,12 +47,16 @@ export const addColumn = async (title: string, headingColor: string) => {
             heading_color: headingColor,
             order: nextOrder,
         },
-    ])
+    ]);
 
     if (error) {
-        console.error('Insert failed:', error)
+        console.error('Insert failed:', error);
+        return Promise.reject(error);
     }
-}
+
+    return Promise.resolve("Column added successfully");
+};
+
 
 export const updateColumnOrder = async (columns: ColumnProps[]) => {
     const updateColumns = columns.map((col, index) => ({
@@ -70,14 +80,26 @@ export const updateColumn = async (column: ColumnProps) => {
             title: column.title,
             heading_color: column.headingColor,
         })
-        .eq('id', column.id)
-    if (error) console.error('Update failed:', error)
-}
+        .eq('id', column.id);
+
+    if (error) {
+        console.error('Update failed:', error);
+        return Promise.reject(error);
+    }
+
+    return Promise.resolve("Column updated successfully");
+};
 
 export const deleteColumn = async (columnId: string) => {
-    const { error } = await supabase.from('columns').delete().eq('id', columnId)
-    if (error) console.error('Delete failed:', error)
-}
+    const { error } = await supabase.from('columns').delete().eq('id', columnId);
+
+    if (error) {
+        console.error('Delete failed:', error);
+        return Promise.reject(error);
+    }
+
+    return Promise.resolve("Column deleted successfully");
+};
 
 //-----------------------------------------Cards------------------------------------------//
 
@@ -117,19 +139,21 @@ export const fetchCardsByColumnId = async (columnId: string) => {
 }
 
 export const addCard = async (message: string, columnId: string) => {
-    if (!message) return
+    if (!message) return Promise.reject(new Error("Message is required"));
 
-    // Get current max order to place new card at the end
     const { data: existing, error: fetchError } = await supabase
         .from('cards')
         .select('order')
         .eq('column_id', columnId)
         .order('order', { ascending: false })
-        .limit(1)
+        .limit(1);
 
-    if (fetchError) console.error('Fetch error:', fetchError)
+    if (fetchError) {
+        console.error('Fetch error:', fetchError);
+        return Promise.reject(fetchError);
+    }
 
-    const nextOrder = existing?.[0]?.order + 1 || 1
+    const nextOrder = existing?.[0]?.order + 1 || 1;
 
     const { error } = await supabase.from('cards').insert([
         {
@@ -138,12 +162,16 @@ export const addCard = async (message: string, columnId: string) => {
             column_id: columnId,
             order: nextOrder,
         },
-    ])
+    ]);
 
     if (error) {
-        console.error('Insert failed:', error)
+        console.error('Insert failed:', error);
+        return Promise.reject(error);
     }
-}
+
+    return Promise.resolve("Card added successfully");
+};
+
 
 export const updateCard = async (card: CardProps) => {
     const { error } = await supabase
@@ -151,9 +179,16 @@ export const updateCard = async (card: CardProps) => {
         .update({
             message: card.message,
         })
-        .eq('id', card.id)
-    if (error) console.error('Update failed:', error)
-}
+        .eq('id', card.id);
+
+    if (error) {
+        console.error('Update failed:', error);
+        return Promise.reject(error);
+    }
+
+    return Promise.resolve("Card updated successfully");
+};
+
 
 export const updateCardOrder = async (cards: CardProps[]) => {
     const updateCards = cards.map((card, index) => ({
@@ -171,7 +206,14 @@ export const updateCardOrder = async (cards: CardProps[]) => {
 }
 
 export const deleteCard = async (cardId: string) => {
-    const { error } = await supabase.from('cards').delete().eq('id', cardId)
-    if (error) console.error('Delete failed:', error)
-}
+  const { error } = await supabase.from('cards').delete().eq('id', cardId);
+
+  if (error) {
+    console.error('Delete failed:', error);
+    return Promise.reject(error);
+  }
+
+  return Promise.resolve("Card deleted successfully");
+};
+
 

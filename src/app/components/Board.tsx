@@ -1,10 +1,12 @@
-import { handleDragEnd, handleDragOver} from "@/lib/utils/dragHelper"
+import { handleDragEnd, handleDragOver } from "@/lib/utils/dragHelper"
 import { CardProps, ColumnProps } from "@/types/boardType"
 import Column from "./Column"
 import ColumnDropIndicator from "./ColumnDropIndicator"
 import { DragEvent, useEffect, useState } from "react"
 import { addColumn, fetchCards, fetchColumns, updateColumnOrder } from "@/lib/utils/dataHelper"
 import LoadingSpinner from "./LoadingSpinner"
+import { toast } from 'react-toastify';
+
 
 export default function Board() {
     const DROP_INDICATOR_LABEL = "board";
@@ -33,7 +35,19 @@ export default function Board() {
     }
 
     const handleAddColumn = async () => {
-        await addColumn(`Column ${columns.length + 1}`, "text-yellow-200");
+        // await addColumn(`Column ${columns.length + 1}`, "text-yellow-200");
+        await toast.promise(
+            addColumn(`Column ${columns.length + 1}`, "text-yellow-200"),
+            {
+                pending: 'Adding column...',
+                success: 'Column added successfully! 🎉',
+                error: 'Failed to add column 🤯',
+            },
+            {
+                autoClose: 1500
+            }
+        );
+
         fetchData();
     }
 
@@ -49,8 +63,8 @@ export default function Board() {
 
     return (
         <div className="flex gap-4 m-20"
-        onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
-        onDrop={handleColumnDragEnd}
+            onDragOver={(e) => handleDragOver(e, DROP_INDICATOR_LABEL)}
+            onDrop={handleColumnDragEnd}
         >
             {loading ? (
                 <div className="flex justify-center items-center w-full">
