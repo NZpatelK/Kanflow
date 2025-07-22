@@ -84,11 +84,10 @@ export default function Column({ column, fetchData, cards, setCards }: ColumnsPr
                     className="min-w-[300px] p-4 rounded"
                 >
                     <div className="relative">
-                        {/* <h2 className={column?.headingColor}>{column.title}</h2> */}
                         <input
                             ref={inputRef}
                             type="text"
-                            className={`w-full p-3 rounded focus:outline-0 ${isEditing ? "border-2 border-blue-500 bg-blue-400/30" : ""}`}
+                            className={`w-full p-3 rounded font-bold focus:outline-0 ${column?.headingColor} ${isEditing ? "border-2 border-blue-500 bg-blue-400/30" : ""}`}
                             value={title}
                             readOnly={!isEditing}
                             onChange={(e) => { setTitle(e.target.value) }}
