@@ -129,6 +129,16 @@ export const addCard = async (message: string, columnId: string) => {
     }
 }
 
+export const updateCard = async (card: CardProps) => {
+    const { error } = await supabase
+        .from('cards')
+        .update({
+            message: card.message,
+        })
+        .eq('id', card.id)
+    if (error) console.error('Update failed:', error)
+}
+
 export const updateCardOrder = async (cards: CardProps[]) => {
     const updateCards = cards.map((card, index) => ({
         id: card.id,
