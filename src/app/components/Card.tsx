@@ -28,7 +28,6 @@ export default function Card({ card, fetchData }: DisplayCardProps) {
                 !inputRef.current.contains(event.target as Node) &&
                 isEditing
             ) {
-                // Save to DB if user clicks outside
                 handleUpdateMessage();
             }
         };
@@ -77,12 +76,10 @@ export default function Card({ card, fetchData }: DisplayCardProps) {
                     value={message}
                     readOnly={!isEditing}
                     onChange={(e) => setMessage(e.target.value)}
-                    className={`w-full p-3 rounded focus:outline-0 ${isEditing ? "border-2 border-blue-500 bg-blue-400/30" : ""
-                        }`}
+                    className={`w-full p-3 rounded focus:outline-0 ${isEditing ? "border-2 border-blue-500 bg-blue-400/30" : ""}`}
                 />
                 <div
-                    className={`absolute top-1/2 right-2 -translate-y-1/2 transition duration-300 flex ${active ? "opacity-100" : "opacity-0"
-                        }`}
+                    className={`absolute top-1/2 right-2 -translate-y-1/2 transition duration-300 flex ${active ? "opacity-100" : "opacity-0" }`}
                 >
                     <div
                         onClick={() => handleUpdateMessage()}
